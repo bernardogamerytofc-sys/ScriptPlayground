@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <button class="open-menu-btn" id="openMenuBtn">☰ Menu</button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="close-btn" id="closeMenuBtn">✖ Close</button>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="menu-item" id="createBtn">
+                <span class="icon">➕</span> Create a playground
+            </button>
+            <button class="menu-item" id="joinBtn">
+                <span class="icon">🎟</span> Join a playground
+            </button>
+            <button class="menu-item" id="listBtn">
+                <span class="icon">📝</span> Playground list
+            </button>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <h1 id="pageTitle">Bem-vindo ao Playground</h1>
+        <p id="pageDescription">Abra o menu no canto superior esquerdo para começar.</p>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

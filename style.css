@@ -1,0 +1,167 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Inter, system-ui, sans-serif;
+}
+
+body {
+    background-color: #0d0d11;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+}
+
+/* Botão de abrir menu */
+.open-menu-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #1a1a24;
+    color: #ffffff;
+    border: 1px solid #2e2e3e;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.open-menu-btn:hover {
+    background-color: #252536;
+    border-color: #4f46e5;
+    transform: translateY(-2px);
+}
+
+/* Menu Lateral (Sidebar) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px; /* Escondido por padrão */
+    width: 280px;
+    height: 100vh;
+    background-color: #12121a;
+    border-right: 1px solid #1f1f2e;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 100;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar.active {
+    left: 0; /* Desliza para dentro da tela */
+}
+
+/* Botão Fechar */
+.sidebar-header {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Navegação e Botões do Menu */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #1a1a26;
+    color: #cbd5e1;
+    border: 1px solid #262636;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.25s ease;
+}
+
+.menu-item .icon {
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+.menu-item:hover {
+    background-color: #242438;
+    color: #ffffff;
+    border-color: #6366f1;
+    transform: translateX(4px);
+}
+
+.menu-item:hover .icon {
+    transform: scale(1.2);
+}
+
+.menu-item:active {
+    transform: translateX(2px) scale(0.98);
+}
+
+/* Fundo escuro quando menu está aberto */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 90;
+}
+
+.overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Área de Conteúdo Principal */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    color: #ffffff;
+}
+
+.content p {
+    color: #94a3b8;
+    font-size: 1.1rem;
+}
