@@ -3,36 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playground Dashboard</title>
+    <title>Playground Network & IDE</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <button class="open-menu-btn" id="openMenuBtn">☰ Menu</button>
+    <canvas id="bgCanvas"></canvas>
 
+    <button class="open-menu-btn" id="openMenuBtn">☰ Menu</button>
     <div class="overlay" id="overlay"></div>
 
+    <!-- Menu Lateral Esquerdo (Com a Aba de Ajuda incluída) -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <button class="close-btn" id="closeMenuBtn">✖ Close</button>
+            <div class="user-status" id="userStatus">👤 Visitante</div>
         </div>
         <nav class="sidebar-nav">
-            <button class="menu-item" id="createBtn">
-                <span class="icon">➕</span> Create a playground
-            </button>
-            <button class="menu-item" id="joinBtn">
-                <span class="icon">🎟</span> Join a playground
-            </button>
-            <button class="menu-item" id="listBtn">
-                <span class="icon">📝</span> Playground list
-            </button>
+            <button class="menu-item" id="loginBtn"><span class="icon">🔑</span> Fazer Login / Perfil</button>
+            <button class="menu-item" id="createBtn"><span class="icon">➕</span> Create a playground</button>
+            <button class="menu-item" id="joinBtn"><span class="icon">🎟</span> Join a playground</button>
+            <button class="menu-item" id="listBtn"><span class="icon">📝</span> Playground list</button>
+            <button class="menu-item" id="helpBtn"><span class="icon">📖</span> Documentação & Ajuda</button>
         </nav>
     </aside>
 
+    <!-- Conteúdo Principal -->
     <main class="content">
-        <h1 id="pageTitle">Bem-vindo ao Playground</h1>
-        <p id="pageDescription">Abra o menu no canto superior esquerdo para começar.</p>
+        <!-- Dashboard / Boas-Vindas -->
+        <div id="welcomeView" class="view">
+            <h1>Playground Network</h1>
+            <p>Acesse o menu para criar, explorar ou aprender a programar em PlayScript.</p>
+        </div>
+
+        <!-- Lista de Salas -->
+        <div id="listView" class="view hidden">
+            <h1>📝 Playground List</h1>
+            <div class="playground-grid" id="playgroundGrid"></div>
+        </div>
+
+        <!-- Aba de Ajuda e Documentação (Agrupada no Menu) -->
+        <div id="helpView" class="view hidden">
+            <h1>📖 Documentação PlayScript</h1>
+            <p>A linguagem mistura comandos do Skript, tags no estilo HTML e lógica rápida do Luau.</p>
+
+            <div class="docs-container">
+                <div class="doc-card">
+                    <code>on join: send "Mensagem"</code>
+                    <p>Sintaxe Skript: Executa uma ação de boas-vindas.</p>
+                </div>
+                <div class="doc-card">
+                    <code>local x = 10 | print(x)</code>
+                    <p>Sintaxe Luau: Declaração de variáveis locais e exibição no console.</p>
+                </div>
+                <div class="doc-card">
+                    <code>&lt;button color="#22c55e"&gt;Clique&lt;/button&gt;</code>
+                    <p>Sintaxe HTML: Cria botões e componentes visuais estruturados.</p>
+                </div>
+                <div class="doc-card">
+                    <code>loop 3 times: create box "#6366f1"</code>
+                    <p>Sintaxe Skript: Estrutura de repetição para gerar múltiplos elementos.</p>
+                </div>
+                <div class="doc-card">
+                    <code>send alert "Mensagem"</code>
+                    <p>Exibe um aviso pop-up na tela do visitante.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ambiente da Sala de Programação -->
+        <div id="roomView" class="view hidden room-container">
+            <div class="room-header">
+                <div>
+                    <h2 id="roomTitle">Nome do Playground</h2>
+                    <span id="roomBadge" class="badge">Pública</span>
+                    <span id="roomCodeDisplay" class="code-tag">#0000</span>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" id="shareRoomBtn">🔗 Copiar Link</button>
+                    <!-- Botão exclusivo para quem tem permissão de edição -->
+                    <button class="btn btn-admin hidden" id="adminEditBtn">⚡ Modificar Configurações (Admin)</button>
+                </div>
+            </div>
+
+            <div class="ide-layout">
+                <div class="editor-pane">
+                    <div class="pane-header">
+                        <span>Editor (PlayScript)</span>
+                        <span class="hint-tag">Pressione [TAB] para autocompletar</span>
+                    </div>
+                    <textarea id="codeEditor" spellcheck="false" placeholder="// Pressione TAB para sugestões de comandos..."></textarea>
+
+                    <div class="ai-assistant">
+                        <div class="ai-header">🤖 Assistente IA</div>
+                        <div class="ai-message" id="aiOutput">Aguardando código...</div>
+                    </div>
+                </div>
+
+                <div class="preview-pane">
+                    <div class="pane-header">Preview em Tempo Real</div>
+                    <div id="previewCanvas" class="preview-box"></div>
+                </div>
+            </div>
+        </div>
     </main>
+
+    <!-- Modal: Login / Identificação -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h2>🔑 Entrar no Perfil</h2>
+            <div class="form-group">
+                <label for="usernameInput">Seu Nome / Usuário</label>
+                <input type="text" id="usernameInput" placeholder="Ex: Alex Dev">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="closeLoginModal">Cancelar</button>
+                <button class="btn btn-primary" id="confirmLogin">Salvar Perfil</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Create a Playground -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <h2>➕ Create a Playground</h2>
+            <div class="form-group">
+                <label for="roomName">Nome da Sala</label>
+                <input type="text" id="roomName" placeholder="Ex: Servidor de Testes">
+            </div>
+            <div class="form-group">
+                <label for="roomVisibility">Visibilidade</label>
+                <select id="roomVisibility">
+                    <option value="public">Pública</option>
+                    <option value="private">Privada</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="closeCreateModal">Cancelar</button>
+                <button class="btn btn-primary" id="confirmCreate">Criar Sala</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Join Playground ("Tudo Pronto!") -->
+    <div class="modal-overlay" id="joinModal">
+        <div class="modal text-center">
+            <h2>🎟 Entrar no Playground</h2>
+            <p class="subtitle">Conectando aos servidores do Playground...</p>
+            
+            <div class="ready-box">
+                <div class="status-icon">✅</div>
+                <h3>Tudo pronto!</h3>
+                <p>O ambiente de execução e as dependências já foram carregados.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="joinCodeInput">Código da Sala (Opcional)</label>
+                <input type="text" id="joinCodeInput" placeholder="#PG-1001">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="closeJoinModal">Cancelar</button>
+                <button class="btn btn-primary" id="confirmJoin">Entrar Agora</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
