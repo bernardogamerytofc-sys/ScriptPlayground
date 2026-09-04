@@ -3,132 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playground Network & IDE</title>
+    <title>PlayScript Studio & Cloud Network</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <canvas id="bgCanvas"></canvas>
 
-    <button class="open-menu-btn" id="openMenuBtn">☰ Menu</button>
+    <!-- Top Navbar do Studio -->
+    <header class="top-bar">
+        <div class="brand">
+            <button class="open-menu-btn" id="openMenuBtn">☰ Menu</button>
+            <span class="logo-text">PlayScript <span>Studio v2.0</span></span>
+        </div>
+        <div class="top-actions">
+            <span class="cloud-status" id="cloudStatus">☁️ Nuvem Sincronizada</span>
+            <button class="btn btn-primary btn-sm" id="quickRunBtn">▶ Executar (F5)</button>
+        </div>
+    </header>
+
     <div class="overlay" id="overlay"></div>
 
-    <!-- Menu Lateral Esquerdo -->
+    <!-- Menu Lateral -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <button class="close-btn" id="closeMenuBtn">✖ Close</button>
+            <button class="close-btn" id="closeMenuBtn">✖ Fechar</button>
             <div class="user-status" id="userStatus">👤 Visitante</div>
         </div>
         <nav class="sidebar-nav">
-            <button class="menu-item" id="loginBtn"><span class="icon">🔑</span> Fazer Login / Perfil</button>
-            <button class="menu-item" id="createBtn"><span class="icon">➕</span> Create a playground</button>
-            <button class="menu-item" id="joinBtn"><span class="icon">🎟</span> Join a playground</button>
-            <button class="menu-item" id="listBtn"><span class="icon">📝</span> Playground list</button>
-            <button class="menu-item" id="helpBtn"><span class="icon">📖</span> Documentação & Ajuda</button>
+            <button class="menu-item" id="loginBtn"><span class="icon">🔑</span> Login / Perfil</button>
+            <button class="menu-item" id="createBtn"><span class="icon">➕</span> Criar Playground</button>
+            <button class="menu-item" id="joinBtn"><span class="icon">🎟</span> Entrar por Código</button>
+            <button class="menu-item" id="listBtn"><span class="icon">🌐</span> Playgrounds na Nuvem</button>
+            <button class="menu-item" id="changelogBtn"><span class="icon">📜</span> Log de Atualizações</button>
+            <button class="menu-item" id="helpBtn"><span class="icon">📖</span> Documentação PlayScript</button>
         </nav>
     </aside>
 
     <!-- Conteúdo Principal -->
     <main class="content">
-        <!-- Dashboard / Boas-Vindas -->
+        <!-- Dashboard Boas-Vindas -->
         <div id="welcomeView" class="view">
-            <h1>Playground Network</h1>
-            <p>Acesse o menu no canto superior esquerdo para começar.</p>
-        </div>
-
-        <!-- Lista de Salas -->
-        <div id="listView" class="view hidden">
-            <h1>📝 Playground List</h1>
-            <div class="playground-grid" id="playgroundGrid"></div>
-        </div>
-
-        <!-- Aba de Documentação -->
-        <div id="helpView" class="view hidden">
-            <h1>📖 Documentação PlayScript</h1>
-            <p>Sintaxe rápida combinando Skript, HTML e Luau.</p>
-            <div class="docs-container">
-                <div class="doc-card">
-                    <code>on join: send "Mensagem"</code>
-                    <p>Sintaxe Skript: Executa evento de boas-vindas.</p>
-                </div>
-                <div class="doc-card">
-                    <code>local x = 10 | print(x)</code>
-                    <p>Sintaxe Luau: Declaração de variáveis locais.</p>
-                </div>
-                <div class="doc-card">
-                    <code>&lt;button color="#22c55e"&gt;Clique&lt;/button&gt;</code>
-                    <p>Sintaxe HTML: Renderiza botões e componentes visuais.</p>
+            <div class="hero-card">
+                <h1>🚀 PlayScript Studio</h1>
+                <p>Ambiente completo de desenvolvimento com execução em tempo real e salvamento em nuvem.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="heroCreateBtn">➕ Criar Novo Projeto</button>
+                    <button class="btn btn-secondary" id="heroListBtn">🌐 Explorar Lobies</button>
                 </div>
             </div>
         </div>
 
-        <!-- Ambiente da Sala (IDE) -->
+        <!-- Lista de Lobbies na Nuvem -->
+        <div id="listView" class="view hidden">
+            <div class="view-header">
+                <h1>🌐 Playgrounds Públicos na Nuvem</h1>
+                <p>Salas salvas em tempo real na nuvem local.</p>
+            </div>
+            <div class="playground-grid" id="playgroundGrid"></div>
+        </div>
+
+        <!-- Documentação PlayScript Avançada -->
+        <div id="helpView" class="view hidden">
+            <h1>📖 Documentação PlayScript v2.0</h1>
+            <div class="docs-grid">
+                <div class="doc-card">
+                    <span class="lang-tag skript">Skript</span>
+                    <code>on join: send "Mensagem"</code>
+                    <p>Executa ações quando um jogador conecta no playground.</p>
+                </div>
+                <div class="doc-card">
+                    <span class="lang-tag luau">Luau</span>
+                    <code>local vida = 100</code>
+                    <p>Declaração de variáveis locais com suporte a cálculos.</p>
+                </div>
+                <div class="doc-card">
+                    <span class="lang-tag html">HTML/UI</span>
+                    <code>&lt;button color="#6366f1"&gt;Atacar&lt;/button&gt;</code>
+                    <p>Renderiza elementos de interface customizados.</p>
+                </div>
+                <div class="doc-card">
+                    <span class="lang-tag skript">Skript</span>
+                    <code>loop 5 times: create box "#3b82f6"</code>
+                    <p>Gera múltiplos blocos visuais na tela.</p>
+                </div>
+                <div class="doc-card">
+                    <span class="lang-tag luau">Luau</span>
+                    <code>if vida == 100 then send "Vida Cheia"</code>
+                    <p>Estrutura condicional para tomar decisões de lógica.</p>
+                </div>
+                <div class="doc-card">
+                    <span class="lang-tag html">Efeitos</span>
+                    <code>effect particle "#a855f7"</code>
+                    <p>Dispara efeitos visuais e partículas no canvas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log de Atualizações (Update Log) -->
+        <div id="changelogView" class="view hidden">
+            <h1>📜 Update Log (Notas de Atualização)</h1>
+            <div class="changelog-container">
+                <div class="changelog-card">
+                    <div class="changelog-header">
+                        <span class="version-tag">v2.0.0</span>
+                        <span class="date-tag">03/09/2026</span>
+                    </div>
+                    <h3>🔥 Mega Studio Rework & Cloud Persistence</h3>
+                    <ul>
+                        <li>✨ <b>Salvamento na Nuvem:</b> Todos os lobbies públicos agora salvam automaticamente o código.</li>
+                        <li>🎨 <b>Interface Redesenhada:</b> Novo layout estilo Studio profissional com Topbar e Explorer.</li>
+                        <li>💻 <b>PlayScript 2.0 Engine:</b> Suporte a condicionais `if/then`, laços `loop`, criação dinâmica de caixas e partículas.</li>
+                        <li>⌨️ <b>Tab Complete Inteligente:</b> Autocompletar expandido diretamente no editor.</li>
+                        <li>👑 <b>Painel de Admin:</b> Acesso exclusivo para administradores alterarem as configs da sala.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- IDE / Studio de Programação -->
         <div id="roomView" class="view hidden room-container">
-            <div class="room-header">
-                <div>
-                    <h2 id="roomTitle">Nome do Playground</h2>
+            <div class="studio-bar">
+                <div class="studio-info">
+                    <h2 id="roomTitle">Projeto</h2>
                     <span id="roomBadge" class="badge">Pública</span>
                     <span id="roomCodeDisplay" class="code-tag">#0000</span>
                 </div>
-                <div>
-                    <button class="btn btn-secondary" id="shareRoomBtn">🔗 Copiar Link</button>
-                    <button class="btn btn-admin hidden" id="adminEditBtn">⚡ Modificar Configurações</button>
+                <div class="studio-actions">
+                    <button class="btn btn-secondary btn-sm" id="saveCloudBtn">☁️ Salvar na Nuvem</button>
+                    <button class="btn btn-secondary btn-sm" id="shareRoomBtn">🔗 Link</button>
+                    <button class="btn btn-admin btn-sm hidden" id="adminEditBtn">⚡ Configs Admin</button>
                 </div>
             </div>
 
             <div class="ide-layout">
+                <!-- Painel Esquerdo: Editor -->
                 <div class="editor-pane">
                     <div class="pane-header">
-                        <span>Editor (PlayScript)</span>
-                        <span class="hint-tag">Pressione [TAB] para autocompletar</span>
+                        <span>📝 Editor de Código</span>
+                        <span class="hint-tag">[TAB] Autocompletar</span>
                     </div>
-                    <textarea id="codeEditor" spellcheck="false" placeholder="// Digite seu código ou pressione TAB..."></textarea>
+                    <textarea id="codeEditor" spellcheck="false" placeholder="// Digite em PlayScript (Skript + HTML + Luau)..."></textarea>
+                    
                     <div class="ai-assistant">
-                        <div class="ai-header">🤖 Assistente IA</div>
-                        <div class="ai-message" id="aiOutput">Aguardando código...</div>
+                        <div class="ai-header">🤖 Console / Assistente PlayScript</div>
+                        <div class="ai-message" id="aiOutput">Aguardando compilação...</div>
                     </div>
                 </div>
 
+                <!-- Painel Direito: Preview Canvas & UI -->
                 <div class="preview-pane">
-                    <div class="pane-header">Preview em Tempo Real</div>
+                    <div class="pane-header">🎮 Viewport / Execução do Playground</div>
                     <div id="previewCanvas" class="preview-box"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modais Flutuantes -->
+    <!-- Modais -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal">
             <h2>🔑 Entrar no Perfil</h2>
             <div class="form-group">
-                <label for="usernameInput">Seu Nome / Usuário</label>
-                <input type="text" id="usernameInput" placeholder="Ex: Alex Dev">
+                <label for="usernameInput">Nome de Usuário</label>
+                <input type="text" id="usernameInput" placeholder="Ex: AdminAlex ou DevPlay">
             </div>
+            <p class="modal-hint">Dica: Use "Admin" ou "Dev" no nome para ativar as permissões de edição do site.</p>
             <div class="modal-actions">
                 <button class="btn btn-secondary" id="closeLoginModal">Cancelar</button>
-                <button class="btn btn-primary" id="confirmLogin">Salvar Perfil</button>
+                <button class="btn btn-primary" id="confirmLogin">Salvar</button>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="createModal">
         <div class="modal">
-            <h2>➕ Create a Playground</h2>
+            <h2>➕ Criar Novo Playground</h2>
             <div class="form-group">
-                <label for="roomName">Nome da Sala</label>
-                <input type="text" id="roomName" placeholder="Ex: Servidor de Testes">
+                <label for="roomName">Nome do Playground</label>
+                <input type="text" id="roomName" placeholder="Ex: Meu Servidor RPG">
             </div>
             <div class="form-group">
-                <label for="roomVisibility">Visibilidade</label>
+                <label for="roomVisibility">Visibilidade na Nuvem</label>
                 <select id="roomVisibility">
-                    <option value="public">Pública</option>
+                    <option value="public">Pública (Nuvem Pública)</option>
                     <option value="private">Privada</option>
                 </select>
             </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" id="closeCreateModal">Cancelar</button>
-                <button class="btn btn-primary" id="confirmCreate">Criar Sala</button>
+                <button class="btn btn-primary" id="confirmCreate">Criar e Salvar</button>
             </div>
         </div>
     </div>
@@ -137,17 +201,17 @@
         <div class="modal text-center">
             <h2>🎟 Entrar no Playground</h2>
             <div class="ready-box">
-                <div class="status-icon">✅</div>
+                <div class="status-icon">⚡</div>
                 <h3>Tudo pronto!</h3>
-                <p>Ambiente e dependências carregados com sucesso.</p>
+                <p>Conexão estabelecida com os servidores em nuvem.</p>
             </div>
             <div class="form-group">
-                <label for="joinCodeInput">Código da Sala (Opcional)</label>
+                <label for="joinCodeInput">Código da Sala</label>
                 <input type="text" id="joinCodeInput" placeholder="#PG-1001">
             </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" id="closeJoinModal">Cancelar</button>
-                <button class="btn btn-primary" id="confirmJoin">Entrar Agora</button>
+                <button class="btn btn-primary" id="confirmJoin">Entrar</button>
             </div>
         </div>
     </div>
