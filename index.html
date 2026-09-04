@@ -13,7 +13,7 @@
     <button class="open-menu-btn" id="openMenuBtn">☰ Menu</button>
     <div class="overlay" id="overlay"></div>
 
-    <!-- Menu Lateral Esquerdo (Com a Aba de Ajuda incluída) -->
+    <!-- Menu Lateral Esquerdo -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <button class="close-btn" id="closeMenuBtn">✖ Close</button>
@@ -33,7 +33,7 @@
         <!-- Dashboard / Boas-Vindas -->
         <div id="welcomeView" class="view">
             <h1>Playground Network</h1>
-            <p>Acesse o menu para criar, explorar ou aprender a programar em PlayScript.</p>
+            <p>Acesse o menu no canto superior esquerdo para começar.</p>
         </div>
 
         <!-- Lista de Salas -->
@@ -42,36 +42,27 @@
             <div class="playground-grid" id="playgroundGrid"></div>
         </div>
 
-        <!-- Aba de Ajuda e Documentação (Agrupada no Menu) -->
+        <!-- Aba de Documentação -->
         <div id="helpView" class="view hidden">
             <h1>📖 Documentação PlayScript</h1>
-            <p>A linguagem mistura comandos do Skript, tags no estilo HTML e lógica rápida do Luau.</p>
-
+            <p>Sintaxe rápida combinando Skript, HTML e Luau.</p>
             <div class="docs-container">
                 <div class="doc-card">
                     <code>on join: send "Mensagem"</code>
-                    <p>Sintaxe Skript: Executa uma ação de boas-vindas.</p>
+                    <p>Sintaxe Skript: Executa evento de boas-vindas.</p>
                 </div>
                 <div class="doc-card">
                     <code>local x = 10 | print(x)</code>
-                    <p>Sintaxe Luau: Declaração de variáveis locais e exibição no console.</p>
+                    <p>Sintaxe Luau: Declaração de variáveis locais.</p>
                 </div>
                 <div class="doc-card">
                     <code>&lt;button color="#22c55e"&gt;Clique&lt;/button&gt;</code>
-                    <p>Sintaxe HTML: Cria botões e componentes visuais estruturados.</p>
-                </div>
-                <div class="doc-card">
-                    <code>loop 3 times: create box "#6366f1"</code>
-                    <p>Sintaxe Skript: Estrutura de repetição para gerar múltiplos elementos.</p>
-                </div>
-                <div class="doc-card">
-                    <code>send alert "Mensagem"</code>
-                    <p>Exibe um aviso pop-up na tela do visitante.</p>
+                    <p>Sintaxe HTML: Renderiza botões e componentes visuais.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Ambiente da Sala de Programação -->
+        <!-- Ambiente da Sala (IDE) -->
         <div id="roomView" class="view hidden room-container">
             <div class="room-header">
                 <div>
@@ -81,8 +72,7 @@
                 </div>
                 <div>
                     <button class="btn btn-secondary" id="shareRoomBtn">🔗 Copiar Link</button>
-                    <!-- Botão exclusivo para quem tem permissão de edição -->
-                    <button class="btn btn-admin hidden" id="adminEditBtn">⚡ Modificar Configurações (Admin)</button>
+                    <button class="btn btn-admin hidden" id="adminEditBtn">⚡ Modificar Configurações</button>
                 </div>
             </div>
 
@@ -92,8 +82,7 @@
                         <span>Editor (PlayScript)</span>
                         <span class="hint-tag">Pressione [TAB] para autocompletar</span>
                     </div>
-                    <textarea id="codeEditor" spellcheck="false" placeholder="// Pressione TAB para sugestões de comandos..."></textarea>
-
+                    <textarea id="codeEditor" spellcheck="false" placeholder="// Digite seu código ou pressione TAB..."></textarea>
                     <div class="ai-assistant">
                         <div class="ai-header">🤖 Assistente IA</div>
                         <div class="ai-message" id="aiOutput">Aguardando código...</div>
@@ -108,7 +97,7 @@
         </div>
     </main>
 
-    <!-- Modal: Login / Identificação -->
+    <!-- Modais Flutuantes -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal">
             <h2>🔑 Entrar no Perfil</h2>
@@ -123,7 +112,6 @@
         </div>
     </div>
 
-    <!-- Modal: Create a Playground -->
     <div class="modal-overlay" id="createModal">
         <div class="modal">
             <h2>➕ Create a Playground</h2>
@@ -145,23 +133,18 @@
         </div>
     </div>
 
-    <!-- Modal: Join Playground ("Tudo Pronto!") -->
     <div class="modal-overlay" id="joinModal">
         <div class="modal text-center">
             <h2>🎟 Entrar no Playground</h2>
-            <p class="subtitle">Conectando aos servidores do Playground...</p>
-            
             <div class="ready-box">
                 <div class="status-icon">✅</div>
                 <h3>Tudo pronto!</h3>
-                <p>O ambiente de execução e as dependências já foram carregados.</p>
+                <p>Ambiente e dependências carregados com sucesso.</p>
             </div>
-
             <div class="form-group">
                 <label for="joinCodeInput">Código da Sala (Opcional)</label>
                 <input type="text" id="joinCodeInput" placeholder="#PG-1001">
             </div>
-
             <div class="modal-actions">
                 <button class="btn btn-secondary" id="closeJoinModal">Cancelar</button>
                 <button class="btn btn-primary" id="confirmJoin">Entrar Agora</button>

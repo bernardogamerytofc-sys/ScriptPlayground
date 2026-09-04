@@ -1,4 +1,4 @@
-// --- SISTEMA DE ÁUDIO ---
+// ÁUDIO WEB API
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playSound(freq, type = 'sine', duration = 0.08) {
     if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -6,7 +6,7 @@ function playSound(freq, type = 'sine', duration = 0.08) {
     const gain = audioCtx.createGain();
     osc.type = type;
     osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -19,7 +19,7 @@ document.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => playSound(650, 'triangle', 0.08));
 });
 
-// --- CANVAS ANIMADO ---
+// CANVAS FUNDO
 const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -54,27 +54,20 @@ function animateParticles() {
 }
 animateParticles();
 
-// --- CONTROLE DE USUÁRIO E PERMISSÕES ---
+// CONTROLE DE USUÁRIO
 let currentUser = { name: "Visitante", canEdit: false };
-
 const userStatus = document.getElementById('userStatus');
 const loginModal = document.getElementById('loginModal');
 const adminEditBtn = document.getElementById('adminEditBtn');
 
-document.getElementById('loginBtn').onclick = () => {
-    toggleMenu(false);
-    loginModal.classList.add('active');
-};
-
+document.getElementById('loginBtn').onclick = () => { toggleMenu(false); loginModal.classList.add('active'); };
 document.getElementById('closeLoginModal').onclick = () => loginModal.classList.remove('active');
 
 document.getElementById('confirmLogin').onclick = () => {
     const name = document.getElementById('usernameInput').value.trim();
     if (name) {
         currentUser.name = name;
-        // Se o nome contiver "Admin" ou "Dev", libera a permissão de editar
         currentUser.canEdit = name.toLowerCase().includes('admin') || name.toLowerCase().includes('dev');
-        
         userStatus.textContent = `👤 ${currentUser.name} ${currentUser.canEdit ? '(Editor)' : ''}`;
         loginModal.classList.remove('active');
         updatePermissionsUI();
@@ -89,7 +82,7 @@ function updatePermissionsUI() {
     }
 }
 
-// --- NAVEGAÇÃO E VIEWS ---
+// MENU & NAVEGAÇÃO
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const createModal = document.getElementById('createModal');
@@ -102,7 +95,7 @@ const roomView = document.getElementById('roomView');
 const playgroundGrid = document.getElementById('playgroundGrid');
 
 let playgrounds = [
-    { name: "Lobby Principal", vis: "public", code: "#PG-100", owner: "Dev", codeContent: 'on join: send "Bem-vindo ao lobby!"\nlocal autor = "Sistema"\n<button color="#6366f1">Entrar</button>' }
+    { name: "Lobby Principal", vis: "public", code: "#PG-100", owner: "Dev", codeContent: 'on join: send "Bem-vindo ao lobby!"\n<button color="#6366f1">Entrar</button>' }
 ];
 
 function toggleMenu(open) {
@@ -130,7 +123,6 @@ document.getElementById('helpBtn').onclick = () => { toggleMenu(false); showView
 document.getElementById('closeCreateModal').onclick = () => createModal.classList.remove('active');
 document.getElementById('closeJoinModal').onclick = () => joinModal.classList.remove('active');
 
-// --- AÇÃO DO MODAL JOIN ("Tudo Pronto!") ---
 document.getElementById('confirmJoin').onclick = () => {
     joinModal.classList.remove('active');
     const inputCode = document.getElementById('joinCodeInput').value.trim();
@@ -138,13 +130,12 @@ document.getElementById('confirmJoin').onclick = () => {
     enterRoom(foundRoom);
 };
 
-// --- RENDERIZAÇÃO E SALAS ---
 document.getElementById('confirmCreate').onclick = () => {
     const name = document.getElementById('roomName').value.trim();
     const vis = document.getElementById('roomVisibility').value;
     if (name) {
         const code = "#PG-" + Math.floor(1000 + Math.random() * 9000);
-        const room = { name, vis, code, owner: currentUser.name, codeContent: 'on join: send "Sala criada!"\n<button color="#22c55e">Iniciar</button>' };
+        const room = { name, vis, code, owner: currentUser.name, codeContent: 'on join: send "Nova Sala"\n<button color="#22c55e">Iniciar</button>' };
         playgrounds.push(room);
         createModal.classList.remove('active');
         enterRoom(room);
@@ -172,36 +163,32 @@ function enterRoom(room) {
     runPlayScript();
 }
 
-// --- TAB COMPLETE NO EDITOR ---
+// TAB COMPLETE & IDE ENGINE
 const codeEditor = document.getElementById('codeEditor');
 const autocompleteKeywords = [
     'on join: send ""',
     'local var = 10',
-    'loop 3 times:',
     '<button color="#6366f1">Clique</button>',
-    'send alert ""',
-    'create box "#3b82f6"'
+    'send alert ""'
 ];
 
 codeEditor.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
         e.preventDefault();
         const cursor = codeEditor.selectionStart;
-        const textBeforeCursor = codeEditor.value.substring(0, cursor);
-        const lastWord = textBeforeCursor.split(/\s+/).pop();
+        const textBefore = codeEditor.value.substring(0, cursor);
+        const lastWord = textBefore.split(/\s+/).pop();
 
         if (lastWord) {
             const match = autocompleteKeywords.find(k => k.startsWith(lastWord));
             if (match) {
-                const newText = textBeforeCursor.substring(0, cursor - lastWord.length) + match + codeEditor.value.substring(cursor);
-                codeEditor.value = newText;
+                codeEditor.value = textBefore.substring(0, cursor - lastWord.length) + match + codeEditor.value.substring(cursor);
                 runPlayScript();
             }
         }
     }
 });
 
-// --- ENGINE PLAYSCRIPT (Skript + HTML + Luau) ---
 const previewCanvas = document.getElementById('previewCanvas');
 const aiOutput = document.getElementById('aiOutput');
 
@@ -211,45 +198,27 @@ function runPlayScript() {
     const lines = codeEditor.value.split('\n');
     previewCanvas.innerHTML = "";
     let errors = [];
-    let variables = {};
 
     lines.forEach((line, idx) => {
         const trimmed = line.trim();
         if (!trimmed || trimmed.startsWith("//")) return;
 
-        // 1. Sintaxe Luau (local var = valor)
-        const luauVar = trimmed.match(/^local\s+([a-zA-Z0-9_]+)\s*=\s*(.+)$/);
-        
-        // 2. Sintaxe Skript (on join, loop, send)
         const skriptJoin = trimmed.match(/^on join:\s*send\s*"([^"]+)"$/);
-        const skriptAlert = trimmed.match(/^send alert\s*"([^"]+)"$/);
-        const skriptLoop = trimmed.match(/^loop\s+(\d+)\s+times:$/);
-
-        // 3. Sintaxe HTML (<button>, <title>)
         const htmlButton = trimmed.match(/^<button\s+color="([^"]+)">([^<]+)<\/button>$/);
-        const htmlTitle = trimmed.match(/^<h1>([^<]+)<\/h1>$/);
 
-        if (luauVar) {
-            variables[luauVar[1]] = luauVar[2];
-        } else if (skriptJoin) {
+        if (skriptJoin) {
             const p = document.createElement('p');
             p.textContent = `[EVENTO]: ${skriptJoin[1]}`;
             p.style.color = "#38bdf8";
             previewCanvas.appendChild(p);
-        } else if (skriptAlert) {
-            alert(skriptAlert[1]);
         } else if (htmlButton) {
             const btn = document.createElement('button');
             btn.className = "btn";
             btn.style.backgroundColor = htmlButton[1];
             btn.textContent = htmlButton[2];
             previewCanvas.appendChild(btn);
-        } else if (htmlTitle) {
-            const h1 = document.createElement('h1');
-            h1.textContent = htmlTitle[1];
-            previewCanvas.appendChild(h1);
         } else {
-            errors.push(`Linha ${idx + 1}: Comandos não reconhecidos ou erro de sintaxe.`);
+            errors.push(`Linha ${idx + 1}: Erro de sintaxe.`);
         }
     });
 
@@ -257,7 +226,7 @@ function runPlayScript() {
         aiOutput.textContent = `⚠️ ${errors[0]}`;
         aiOutput.style.color = "#f87171";
     } else {
-        aiOutput.textContent = "🤖 Código compilado com sucesso!";
+        aiOutput.textContent = "🤖 Código compilado perfeitamente!";
         aiOutput.style.color = "#4ade80";
     }
 }
